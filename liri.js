@@ -8,7 +8,11 @@ const fs = require("fs")
 const spotify = new Spotify(keys.spotify);
 const client = new Twitter(keys.twitter);
 
-//commands//my-tweets//spotify-this-song//movie-this//do-what-it-says
+let addInfoToLog = function(info){
+    fs.appendFile("log.txt", info, (err) => {
+        if (err) throw err;
+    })
+}
 let getTweets = function () {
     const params = {
         count: 20,
@@ -19,7 +23,11 @@ let getTweets = function () {
         .then(function (tweets) {
             for (let i = 0; i < tweets.length; i++) {
                 let el = tweets[i];
-                console.log(`\nAt ${el.created_at}, ${el.user.name} tweeted "${el.text}"`);
+                let msg = `\nAt ${el.created_at}, ${el.user.name} tweeted "${el.text}"`
+                console.log(msg);
+                fs.appendFile("log.txt", msg, (err) => {
+                    if (err) throw err;
+                })
             }
         })
         .catch(function (error) {
@@ -35,10 +43,12 @@ let spotifyThisSong = function (song) {
         })
         .then(function (response) {
             let hit = response.tracks.items[0];
-            console.log(`\nArtist(s): ${hit.artists[0].name};
-                        \nSong name: ${hit.name};
-                        \nPreview: ${hit.preview_url};
-                        \nAlbum: ${hit.album.name}\n`)
+            let songInfo = `\nArtist(s): ${hit.artists[0].name};
+                            \nSong name: ${hit.name};
+                            \nPreview: ${hit.preview_url};
+                            \nAlbum: ${hit.album.name}\n`
+            console.log(songInfo);
+            addInfoToLog(songInfo)
         })
         .catch(err => console.log(err));
 }
@@ -48,14 +58,17 @@ let movieThis = function (movie) {
     request(`http://www.omdbapi.com/?apikey=trilogy&t=${search}`, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             let info = JSON.parse(body);
-            console.log(`\nMovie Title: ${info.Title};            
-                        \nYear: ${info.Year}
-                        \nIMDB Rating: ${info.imdbRating}
-                        \nRotton Tomatoes Rating: ${info.Ratings[1].Value}
-                        \nProduced in: ${info.Country}
-                        \nLanguage: ${info.Language}
-                        \nPlot: ${info.Plot}
-                        \nActors: ${info.Actors}\n`)
+            var movieInfo = `\nMovie Title: ${info.Title};            
+                            \nYear: ${info.Year}
+                            \nIMDB Rating: ${info.imdbRating}
+                            \nRotton Tomatoes Rating: ${info.Ratings[1].Value}
+                            \nProduced in: ${info.Country}
+                            \nLanguage: ${info.Language}
+                            \nPlot: ${info.Plot}
+                            \nActors: ${info.Actors}\n`
+            console.log(movieInfo);
+            addInfoToLog(movieInfo)
+
         };
     });
 }

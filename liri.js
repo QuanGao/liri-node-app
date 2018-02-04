@@ -8,16 +8,14 @@ const request = require("request")
 const spotify = new Spotify(keys.spotify);
 const client = new Twitter(keys.twitter);
 
-let commmands = process.argv[2];
-
-let params = {
-    count: 20,
-    screen_name: "QuanGaoG"
-};
 //commands//my-tweets//spotify-this-song//movie-this//do-what-it-says
 
-switch (commmands) {
+switch (process.argv[2]) {
     case "my-tweets":
+        const params = {
+            count: 20,
+            screen_name: "QuanGaoG"
+        };
         console.log("Here're the 20 latest tweets")
         client.get("statuses/user_timeline", params)
             .then(function (tweets) {
@@ -41,10 +39,23 @@ switch (commmands) {
                 console.log(`\nArtist(s): ${hit.artists[0].name};
                     \nSong name: ${hit.name};
                     \nPreview: ${hit.preview_url};
-                    \nAlbum: ${hit.album.name}\n`
-                )
+                    \nAlbum: ${hit.album.name}\n`)
             })
             .catch(err => console.log(err))
-    // case ""
-        
-}
+    case "movie-this":
+        let movie = process.argv[3] || "Mr.Nobody"
+        request(`http://www.omdbapi.com/?apikey=trilogy&t=${movie}`, function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                let info = JSON.parse(body);
+                console.log(`\nMovie Title: ${info.Title};            
+                    \nYear: ${info.Year}
+                    \nIMDB Rating: ${info.imdbRating}
+                    \nRotton Tomatoes Rating: ${info.Ratings[1].Value}
+                    \nProduced in: ${info.Country}
+                    \nLanguage: ${info.Language}
+                    \nPlot: ${info.Plot}
+                    \nActors: ${info.Actors}\n`
+                )         
+            };
+        })
+    }

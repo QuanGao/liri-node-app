@@ -7,6 +7,6 @@
 * "movie-this" gives you the basic information about that movie you are looking for
 * "spotify-this-song" returns song information and a 30s preview link on spotify
 
-### _What's more, Liri can also take commands form random.txt file and store all the output data in the log.txt file_
+### _What's more, Liri can take input form random.txt file and store all the output data in the log.txt file for you_
 
 

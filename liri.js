@@ -9,7 +9,7 @@ const spotify = new Spotify(keys.spotify);
 const client = new Twitter(keys.twitter);
 
 //commands//my-tweets//spotify-this-song//movie-this//do-what-it-says
-var getTweets = function () {
+let getTweets = function () {
     const params = {
         count: 20,
         screen_name: "QuanGaoG"
@@ -27,7 +27,7 @@ var getTweets = function () {
         })
 }
 
-var spotifyThisSong = function (song) {
+let spotifyThisSong = function (song) {
     let searchTerm = song || "The Sign Ace of Base"
     spotify.search({
             type: "track",
@@ -43,8 +43,8 @@ var spotifyThisSong = function (song) {
         .catch(err => console.log(err));
 }
 
-var movieThis = function (movie) {
-    let search= movie || "Mr.Nobody"
+let movieThis = function (movie) {
+    let search = movie || "Mr.Nobody"
     request(`http://www.omdbapi.com/?apikey=trilogy&t=${search}`, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             let info = JSON.parse(body);
@@ -58,39 +58,31 @@ var movieThis = function (movie) {
                         \nActors: ${info.Actors}\n`)
         };
     });
-
 }
 
+let listenToCommands = function (command, item) {
+    switch (command) {
+        case "my-tweets":
+            getTweets();
+            break;
+        case "spotify-this-song":
+            spotifyThisSong(item)
+            break;
+        case "movie-this":
+            movieThis(item);
+            break;
+        default:
+            console.log("sorry, I don't quite understand you");
+    }
+}
 
-switch(process.argv[2]){
-    case "my-tweets":
-        getTweets();
-        break;
-    case "spotify-this-song":
-        spotifyThisSong(process.argv[3])
-        break;
-    case "movie-this":
-        movieThis(process.argv[3]);
-        break;
+switch (process.argv[2]) {
     case "do-what-it-says":
         fs.readFile('./random.txt', "UTF-8", (err, data) => {
             if (err) throw err;
-            let commands = data.split(",")[0];
-            let content = data.split(",")[1];
-            switch(commands){
-                case "my-tweets":
-                    getTweets();
-                    break;
-                case "spotify-this-song":
-                    spotifyThisSong(content)
-                    break;
-                case "movie-this":
-                    movieThis(content);
-                    break;
-                        
-                }
-
-        })
+            listenToCommands(data.split(",")[0], data.split(",")[1]);
+        });
+        break;
+    default:
+        listenToCommands(process.argv[2], process.argv[3]);
 }
-
-

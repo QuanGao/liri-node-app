@@ -1,12 +1,8 @@
 require("dotenv").config();
 
 const keys = require("./keys.js");
-const Spotify = require('node-spotify-api');
-const Twitter = require('twitter');
 const request = require("request")
 const fs = require("fs")
-const spotify = new Spotify(keys.spotify);
-const client = new Twitter(keys.twitter);
 
 let addInfoToLog = function(info){
     fs.appendFile("log.txt", info, (err) => {
@@ -14,6 +10,8 @@ let addInfoToLog = function(info){
     })
 }
 let getTweets = function () {
+    const Twitter = require('twitter');
+    const client = new Twitter(keys.twitter);
     const params = {
         count: 20,
         screen_name: "QuanGaoG"
@@ -36,6 +34,8 @@ let getTweets = function () {
 }
 
 let spotifyThisSong = function (song) {
+    const Spotify = require('node-spotify-api');
+    const spotify = new Spotify(keys.spotify);
     let searchTerm = song || "The Sign Ace of Base"
     spotify.search({
             type: "track",

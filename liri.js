@@ -21,7 +21,8 @@ let getTweets = function () {
         .then(function (tweets) {
             for (let i = 0; i < tweets.length; i++) {
                 let el = tweets[i];
-                let msg = `\nAt ${el.created_at}, ${el.user.name} tweeted "${el.text}"`
+                let msg = `
+    At ${el.created_at}, ${el.user.name} tweeted "${el.text}"`
                 console.log(msg);
                 fs.appendFile("log.txt", msg, (err) => {
                     if (err) throw err;
@@ -43,10 +44,15 @@ let spotifyThisSong = function (song) {
         })
         .then(function (response) {
             let hit = response.tracks.items[0];
-            let songInfo = `\nArtist(s): ${hit.artists[0].name};
-                            \nSong name: ${hit.name};
-                            \nPreview: ${hit.preview_url};
-                            \nAlbum: ${hit.album.name}\n`
+            let songInfo = `
+    Artist(s): ${hit.artists[0].name};
+
+    Song name: ${hit.name};
+
+    Preview: ${hit.preview_url};
+
+    Album: ${hit.album.name}
+    `
             console.log(songInfo);
             addInfoToLog(songInfo)
         })
@@ -58,14 +64,22 @@ let movieThis = function (movie) {
     request(`http://www.omdbapi.com/?apikey=trilogy&t=${search}`, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             let info = JSON.parse(body);
-            var movieInfo = `\nMovie Title: ${info.Title};            
-                            \nYear: ${info.Year}
-                            \nIMDB Rating: ${info.imdbRating}
-                            \nRotton Tomatoes Rating: ${info.Ratings[1].Value}
-                            \nProduced in: ${info.Country}
-                            \nLanguage: ${info.Language}
-                            \nPlot: ${info.Plot}
-                            \nActors: ${info.Actors}\n`
+            var movieInfo = `
+        Movie Title: ${info.Title};            
+        
+        Year: ${info.Year}
+        
+        IMDB Rating: ${info.imdbRating}
+        
+        Rotton Tomatoes Rating: ${info.Ratings[1].Value}
+        
+        Produced in: ${info.Country}
+        
+        Language: ${info.Language}
+        
+        Plot: ${info.Plot}
+        
+        Actors: ${info.Actors}`
             console.log(movieInfo);
             addInfoToLog(movieInfo)
 
